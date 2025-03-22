@@ -20,25 +20,27 @@ pub fn build(b: *std.Build) void {
         return;
     };
     defer utils_dir.close();
+    var dir_iter = utils_dir.iterate();
+
     var walker = utils_dir.walk(allocator) catch {
         std.debug.print("Out of memory\n", .{});
         return;
     };
     defer walker.deinit();
-    while (walker.next() catch {
+    while (dir_iter.next() catch {
         return;
     }) |entry| {
         if (entry.kind != .directory) {
-            return;
+            continue;
         }
-        std.debug.print("Found file: {s}\n", .{entry.basename});
-        const root_path = std.fmt.allocPrint(allocator, "src/utils/{s}/main.zig", .{entry.basename}) catch {
+        std.debug.print("Found file: {s}\n", .{entry.name});
+        const root_path = std.fmt.allocPrint(allocator, "src/utils/{s}/main.zig", .{entry.name}) catch {
             std.debug.print("Out of memory\n", .{});
             return;
         };
         std.debug.print("Root path: {s}\n", .{root_path});
 
-        const exe = b.addExecutable(.{ .name = entry.basename, .root_source_file = b.path(root_path), .target = target, .optimize = optimize });
+        const exe = b.addExecutable(.{ .name = entry.name, .root_source_file = b.path(root_path), .target = target, .optimize = optimize });
         exe.root_module.addImport("args", b.dependency("args", .{ .target = target, .optimize = optimize }).module("args"));
 
         b.installArtifact(exe);
