@@ -1,0 +1,19 @@
+name: Build executable
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: [push]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: mlugg/setup-zig@v1
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Build
+        run: |
+          cd ${{ github.workspace }}
+          zig build
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        name: new-utils
+        path: ${{ github.workspace }}/zig-out
+    
