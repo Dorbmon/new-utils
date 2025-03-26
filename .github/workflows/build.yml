@@ -2,7 +2,7 @@ name: Build executable
 run-name: Build
 on: [push]
 jobs:
-  Build And Upload:
+  build-and-upload:
     strategy:
       matrix:
         os:
