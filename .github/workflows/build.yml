@@ -14,4 +14,6 @@ jobs:
           zig build
       - name: Upload
         uses: actions/upload-artifact@v4
-        path: ${{ github.workspace }}/zig-out
+        with:
+          name: new-utils
+          path: ${{ github.workspace }}/zig-out
