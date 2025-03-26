@@ -2,8 +2,13 @@ name: Build executable
 run-name: Build
 on: [push]
 jobs:
-  Explore-GitHub-Actions:
-    runs-on: ubuntu-latest
+  Build And Upload:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: mlugg/setup-zig@v1
       - name: Check out repository code
@@ -15,5 +20,5 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: new-utils
+          name: new-utils-${{ matrix.os }}
           path: ${{ github.workspace }}/zig-out
